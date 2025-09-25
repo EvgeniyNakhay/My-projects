@@ -17,17 +17,17 @@ function App() {
 
   const filteredTodos = todos.filter((todo) => {
     if (filterTodos === "COMPLETED") {
-      return todo.isChecked;
+      return todo.isCompleted;
     } else if (filterTodos === "ACTIVE") {
-      return !todo.isChecked;
+      return !todo.isCompleted;
     } else return todo;
   });
 
   const sortedTodos = [...filteredTodos].sort((a, b) => {
-    if (!a.isChecked && b.isChecked) {
+    if (!a.isCompleted && b.isCompleted) {
       return -1;
     }
-    if (a.isChecked && !b.isChecked) {
+    if (a.isCompleted && !b.isCompleted) {
       return 1;
     }
   });
@@ -57,7 +57,7 @@ function App() {
   }, [todos]);
 
   function clearCompletedTodos() {
-    setTodos(todos.filter((todo) => !todo.isChecked));
+    setTodos(todos.filter((todo) => !todo.isCompleted));
   }
 
   return (

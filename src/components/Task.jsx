@@ -23,25 +23,59 @@ function Task({ todo, setTodos, sortedTodos }) {
     }
   }
 
-  function handleCheckTodo(id) {
-    setTodos((todos) =>
-      todos.map((item) =>
-        item.id === id ? { ...item, isChecked: !item.isChecked } : item
-      )
-    );
+  async function handleCheckTodo(id) {
+    try {
+      const response = await fetch(
+        `https://todo-redev.herokuapp.com/api/todos/${id}/isCompleted`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  // function handleCheckTodo(id) {
+  //   setTodos((todos) =>
+  //     todos.map((item) =>
+  //       item.id === id ? { ...item, isChecked: !item.isChecked } : item
+  //     )
+  //   );
+  // }
 
   function handleEditMode(id) {
     setEditMode(true);
   }
 
-  function saveEditTask(id, newTitle) {
-    setTodos((todos) =>
-      todos.map((item) =>
-        item.id === id ? { ...item, title: newTitle } : item
-      )
-    );
-    setEditMode(false);
+  async function saveEditTask(id, newTitle) {
+    try {
+      const response = await fetch(
+        `https://todo-redev.herokuapp.com/api/todos/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+          },
+          body: JSON.stringify({
+            title: newTitle,
+          }),
+        }
+      );
+      const data = await response.json();
+      setEditMode(false);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   if (editMode) {
@@ -62,13 +96,13 @@ function Task({ todo, setTodos, sortedTodos }) {
       >
         <input
           type="checkbox"
-          checked={todo.isChecked}
+          checked={todo.isCompleted}
           onChange={() => handleCheckTodo(todo.id)}
         />
         <p
           className="todo-task"
           style={{
-            textDecoration: todo.isChecked ? "line-through" : "none",
+            textDecoration: todo.isCompleted ? "line-through" : "none",
           }}
         >
           {todo.title}
