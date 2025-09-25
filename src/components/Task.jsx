@@ -4,6 +4,25 @@ function Task({ todo, setTodos, sortedTodos }) {
   const [editMode, setEditMode] = useState(false);
   const [inputTask, setInputTask] = useState(todo.title);
 
+  async function removeTodo(id) {
+    try {
+      const response = await fetch(
+        `https://todo-redev.herokuapp.com/api/todos/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function handleCheckTodo(id) {
     setTodos((todos) =>
       todos.map((item) =>
@@ -16,9 +35,9 @@ function Task({ todo, setTodos, sortedTodos }) {
     setEditMode(true);
   }
 
-  function handleRemoveTodo(id) {
-    setTodos((todos) => todos.filter((item) => item.id !== id));
-  }
+  // function handleRemoveTodo(id) {
+  //   setTodos((todos) => todos.filter((item) => item.id !== id));
+  // }
 
   function saveEditTask(id, newTitle) {
     setTodos((todos) =>
@@ -65,7 +84,7 @@ function Task({ todo, setTodos, sortedTodos }) {
           >
             📝
           </button>
-          <button onClick={() => handleRemoveTodo(todo.id)}>🗑️</button>
+          <button onClick={() => removeTodo(todo.id)}>🗑️</button>
         </div>
       </div>
     );
