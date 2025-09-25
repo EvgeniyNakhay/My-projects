@@ -9,10 +9,7 @@ function InputTask({ todos, setTodos, setWarning }) {
 
   function onAddTodo() {
     if (inputValue.trim()) {
-      setTodos([
-        ...todos,
-        { id: crypto.randomUUID(), title: inputValue.trim(), isChecked: false },
-      ]);
+      addNewTask();
       setInputValue("");
       setWarning(false);
     } else {
