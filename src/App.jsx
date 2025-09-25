@@ -54,10 +54,6 @@ function App() {
 
   useEffect(() => {
     getAllTasks();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
   function clearCompletedTodos() {

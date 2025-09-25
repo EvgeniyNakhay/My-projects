@@ -18,6 +18,28 @@ function InputTask({ todos, setTodos, setWarning }) {
     }
   }
 
+  async function addNewTask() {
+    try {
+      const request = await fetch(
+        "https://todo-redev.herokuapp.com/api/todos",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+          },
+          body: JSON.stringify({
+            title: inputValue,
+          }),
+        }
+      );
+      const data = await request.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <input
