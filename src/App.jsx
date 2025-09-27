@@ -13,29 +13,10 @@ function App() {
 
   const [warning, setWarning] = useState(false);
 
-  const [filterTodos, setFilterTodos] = useState("ALL");
-
-  const filteredTodos = todos.filter((todo) => {
-    if (filterTodos === "COMPLETED") {
-      return todo.isCompleted;
-    } else if (filterTodos === "ACTIVE") {
-      return !todo.isCompleted;
-    } else return todo;
-  });
-
-  const sortedTodos = [...filteredTodos].sort((a, b) => {
-    if (!a.isCompleted && b.isCompleted) {
-      return -1;
-    }
-    if (a.isCompleted && !b.isCompleted) {
-      return 1;
-    }
-  });
-
   async function getAllTasks() {
     try {
       const response = await fetch(
-        "https://todo-redev.herokuapp.com/api/todos?isCompleted=false",
+        "https://todo-redev.herokuapp.com/api/todos",
         {
           method: "GET",
           headers: {
@@ -68,7 +49,7 @@ function App() {
         <p style={{ color: "red" }}>Нельзя добавить пустую задачу</p>
       ) : null}
 
-      <TodoList todos={todos} setTodos={setTodos} sortedTodos={sortedTodos} />
+      <TodoList todos={todos} setTodos={setTodos} />
       <div>
         <button onClick={() => setFilterTodos("ALL")}>Все</button>
         <button onClick={() => setFilterTodos("ACTIVE")}>Активные</button>

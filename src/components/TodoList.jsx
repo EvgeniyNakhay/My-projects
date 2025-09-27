@@ -1,17 +1,12 @@
 import Task from "./Task";
 
-function TodoList({ setTodos, sortedTodos }) {
+function TodoList({ setTodos, todos }) {
   return (
     <div>
-      {sortedTodos.length === 0 && <h2>Пусто 🫙</h2>}
-      {sortedTodos.map((todo) => {
+      {todos.length === 0 && <h2>Пусто 🫙</h2>}
+      {todos.map((todo) => {
         return (
-          <Task
-            sortedTodos={sortedTodos}
-            key={todo.id}
-            todo={todo}
-            setTodos={setTodos}
-          />
+          <Task key={todo.id} todos={todos} todo={todo} setTodos={setTodos} />
         );
       })}
     </div>
