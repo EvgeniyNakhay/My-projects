@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import MainHeader from "./components/MainHeader";
 import InputTask from "./components/InputTask";
 import TodoList from "./components/TodoList";
@@ -6,17 +6,14 @@ import TodosCounter from "./components/TodosCounter";
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState(() => {
-    const initialTodos = localStorage.getItem("todos");
-    return initialTodos ? JSON.parse(initialTodos) : [];
-  }, []);
-
+  const [todos, setTodos] = useState([]);
   const [warning, setWarning] = useState(false);
+  const [filterTodos, setFilterTodos] = useState("ALL");
 
   async function getAllTasks() {
     try {
       const response = await fetch(
-        "https://todo-redev.herokuapp.com/api/todos",
+        `https://todo-redev.herokuapp.com/api/todos`,
         {
           method: "GET",
           headers: {
@@ -48,8 +45,7 @@ function App() {
       {warning ? (
         <p style={{ color: "red" }}>Нельзя добавить пустую задачу</p>
       ) : null}
-
-      <TodoList todos={todos} setTodos={setTodos} />
+      <TodoList todos={todos} setTodos={setTodos} filterTodos={filterTodos} />
       <div>
         <button onClick={() => setFilterTodos("ALL")}>Все</button>
         <button onClick={() => setFilterTodos("ACTIVE")}>Активные</button>

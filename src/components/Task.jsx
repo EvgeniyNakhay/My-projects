@@ -37,19 +37,10 @@ function Task({ todo, setTodos, sortedTodos }) {
         }
       );
       const data = await response.json();
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   }
-
-  // function handleCheckTodo(id) {
-  //   setTodos((todos) =>
-  //     todos.map((item) =>
-  //       item.id === id ? { ...item, isChecked: !item.isChecked } : item
-  //     )
-  //   );
-  // }
 
   function handleEditMode(id) {
     setEditMode(true);
