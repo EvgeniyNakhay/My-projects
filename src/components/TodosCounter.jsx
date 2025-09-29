@@ -1,5 +1,7 @@
 function TodosCounter({ todos }) {
-  const numberOfCompletedTasks = todos.filter((todo) => !todo.isChecked).length;
+  const numberOfCompletedTasks = todos.filter(
+    (todo) => !todo.isCompleted
+  ).length;
 
   return (
     <div
