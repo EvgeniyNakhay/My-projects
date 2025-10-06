@@ -14,7 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function getAllTasks() {
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await fetch(
         `https://todo-redev.herokuapp.com/api/todos`,
@@ -32,7 +32,7 @@ function App() {
     } catch (error) {
       console.log(error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -51,8 +51,11 @@ function App() {
       {warning ? (
         <p style={{ color: "red" }}>Нельзя добавить пустую задачу</p>
       ) : null}
-
-      <TodoList todos={todos} setTodos={setTodos} filterTodos={filterTodos} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <TodoList todos={todos} setTodos={setTodos} filterTodos={filterTodos} />
+      )}
 
       <div>
         <button onClick={() => setFilterTodos("ALL")}>Все</button>
