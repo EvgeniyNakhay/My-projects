@@ -1,43 +1,47 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { Suspense, useEffect, useState } from "react";
 import MainHeader from "./components/MainHeader";
 import InputTask from "./components/InputTask";
 import TodoList from "./components/TodoList";
 import TodosCounter from "./components/TodosCounter";
+import Loading from "./components/Loading";
+
+import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState(() => {
-    const initialTodos = localStorage.getItem("todos");
-    return initialTodos ? JSON.parse(initialTodos) : [];
-  });
-
+  const [todos, setTodos] = useState([]);
   const [warning, setWarning] = useState(false);
-
   const [filterTodos, setFilterTodos] = useState("ALL");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const filteredTodos = todos.filter((todo) => {
-    if (filterTodos === "COMPLETED") {
-      return todo.isChecked;
-    } else if (filterTodos === "ACTIVE") {
-      return !todo.isChecked;
-    } else return todo;
-  });
-
-  const sortedTodos = [...filteredTodos].sort((a, b) => {
-    if (!a.isChecked && b.isChecked) {
-      return -1;
+  async function getAllTasks() {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://todo-redev.herokuapp.com/api/todos`,
+        {
+          method: "GET",
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      setTodos(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    if (a.isChecked && !b.isChecked) {
-      return 1;
-    }
-  });
+  }
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    getAllTasks();
+  }, []);
 
   function clearCompletedTodos() {
-    setTodos(todos.filter((todo) => !todo.isChecked));
+    // const completedTodos = todos.filter;
   }
 
   return (
@@ -47,8 +51,12 @@ function App() {
       {warning ? (
         <p style={{ color: "red" }}>Нельзя добавить пустую задачу</p>
       ) : null}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <TodoList todos={todos} setTodos={setTodos} filterTodos={filterTodos} />
+      )}
 
-      <TodoList todos={todos} setTodos={setTodos} sortedTodos={sortedTodos} />
       <div>
         <button onClick={() => setFilterTodos("ALL")}>Все</button>
         <button onClick={() => setFilterTodos("ACTIVE")}>Активные</button>
