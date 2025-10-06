@@ -40,8 +40,33 @@ function App() {
     getAllTasks();
   }, []);
 
-  function clearCompletedTodos() {
-    // const completedTodos = todos.filter;
+  async function clearCompletedTodos() {
+    const completedTodos = todos.filter((item) => item.isCompleted);
+    const deletePromises = completedTodos.map((item) => {
+      fetch(`https://todo-redev.herokuapp.com/api/todos/${item.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InpoZW55YV9uYWtoYXlAZ21haWwuY29tIiwiaWQiOjE4OTQsImlhdCI6MTc1ODc4OTE2Mn0.Jzp0zxUwybf6Uyp0_3kUkYZnlZoh3_xR7DXD0WnwAMM",
+          "Content-Type": "application/json",
+        },
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error(`Ошибка при удалении: ${response.statusText}`);
+        }
+        return response.json();
+      });
+    });
+
+    Promise.all(deletePromises)
+      .then((responses) => {
+        console.log("Все элементы успешно удалены:", responses);
+      })
+      .catch((error) => {
+        console.error("Произошла ошибка:", error);
+      });
+    const activeTodos = todos.filter((item) => !item.isCompleted);
+    setTodos(activeTodos);
   }
 
   return (
