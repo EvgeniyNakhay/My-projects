@@ -35,6 +35,7 @@ function InputTask({ todos, setTodos, setWarning }) {
         }
       );
       const data = await request.json();
+      setTodos([...todos, data]);
     } catch (error) {
       console.log(error);
     }

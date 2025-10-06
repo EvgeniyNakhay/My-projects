@@ -3,14 +3,18 @@ import MainHeader from "./components/MainHeader";
 import InputTask from "./components/InputTask";
 import TodoList from "./components/TodoList";
 import TodosCounter from "./components/TodosCounter";
+import Loading from "./components/Loading";
+
 import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [warning, setWarning] = useState(false);
   const [filterTodos, setFilterTodos] = useState("ALL");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getAllTasks() {
+    // setIsLoading(true);
     try {
       const response = await fetch(
         `https://todo-redev.herokuapp.com/api/todos`,
@@ -27,15 +31,17 @@ function App() {
       setTodos(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      // setIsLoading(false);
     }
   }
 
   useEffect(() => {
     getAllTasks();
-  }, [todos]);
+  }, []);
 
   function clearCompletedTodos() {
-    setTodos(todos.filter((todo) => !todo.isCompleted));
+    // const completedTodos = todos.filter;
   }
 
   return (
@@ -45,7 +51,9 @@ function App() {
       {warning ? (
         <p style={{ color: "red" }}>Нельзя добавить пустую задачу</p>
       ) : null}
+
       <TodoList todos={todos} setTodos={setTodos} filterTodos={filterTodos} />
+
       <div>
         <button onClick={() => setFilterTodos("ALL")}>Все</button>
         <button onClick={() => setFilterTodos("ACTIVE")}>Активные</button>

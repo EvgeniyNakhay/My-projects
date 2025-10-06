@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Task({ todo, setTodos, sortedTodos }) {
+function Task({ todo, todos, setTodos, sortedTodos }) {
   const [editMode, setEditMode] = useState(false);
   const [inputTask, setInputTask] = useState(todo.title);
 
@@ -18,6 +18,8 @@ function Task({ todo, setTodos, sortedTodos }) {
         }
       );
       const data = await response.json();
+      const newArray = todos.filter((item) => item.id !== id);
+      setTodos(newArray);
     } catch (error) {
       console.log(error);
     }
@@ -37,6 +39,12 @@ function Task({ todo, setTodos, sortedTodos }) {
         }
       );
       const data = await response.json();
+      const newArray = todos.map((item) => {
+        return item.id === id
+          ? { ...item, isCompleted: !item.isCompleted }
+          : item;
+      });
+      setTodos(newArray);
     } catch (error) {
       console.log(error);
     }
