@@ -50,7 +50,7 @@ function Task({ todo, todos, setTodos, sortedTodos }) {
     }
   }
 
-  function handleEditMode(id) {
+  function handleEditMode() {
     setEditMode(true);
   }
 
@@ -71,6 +71,10 @@ function Task({ todo, todos, setTodos, sortedTodos }) {
         }
       );
       const data = await response.json();
+      const newArray = todos.map((item) => {
+        return item.id === id ? { ...item, title: newTitle } : item;
+      });
+      setTodos(newArray);
       setEditMode(false);
     } catch (error) {
       console.log(error);
@@ -107,10 +111,7 @@ function Task({ todo, todos, setTodos, sortedTodos }) {
           {todo.title}
         </p>
         <div>
-          <button
-            style={{ marginInline: "5px" }}
-            onClick={() => handleEditMode(todo.id)}
-          >
+          <button style={{ marginInline: "5px" }} onClick={handleEditMode}>
             📝
           </button>
           <button onClick={() => handleRemoveTodo(todo.id)}>🗑️</button>
